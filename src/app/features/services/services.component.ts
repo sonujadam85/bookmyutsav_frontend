@@ -133,7 +133,15 @@ import { CategoryTab, CategoryTabsComponent } from '../../shared/category-tabs.c
         </div>
       </section>
     } @empty {
-      @if (!loading()) { <p class="card card-pad text-center text-ink-400">No service found.</p> }
+      @if (!loading()) {
+        @if (!services().length) {
+          <div class="card card-pad text-center py-12">
+            <p class="text-lg font-semibold">No services yet</p>
+            <p class="text-sm text-ink-500 mt-1 max-w-md mx-auto">Start with a heading such as <b>Decoration &amp; Setup</b>, <b>Photography</b> or <b>DJ &amp; Sound</b>, then add your services, prices and photos under it.</p>
+            @if (auth.isAdmin()) { <button class="btn btn-primary mt-5" (click)="addHeading()" [disabled]="busy()"><app-icon name="plus" [size]="16" />Add your first heading</button> }
+          </div>
+        } @else { <p class="card card-pad text-center text-ink-400">No service found.</p> }
+      }
     }
 
     <input #replaceInput type="file" class="hidden" accept="image/*" (change)="replace($event)" />
