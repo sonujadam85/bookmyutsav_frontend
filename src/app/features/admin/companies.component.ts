@@ -11,7 +11,7 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
   PENDING: { label: 'Waiting for approval', cls: 'bg-gold-50 text-gold-700' },
   APPROVED: { label: 'Approved', cls: 'bg-emerald-50 text-emerald-700' },
   REJECTED: { label: 'Rejected', cls: 'bg-red-50 text-red-700' },
-  SUSPENDED: { label: 'Suspended', cls: 'bg-ink-100 text-ink-600' },
+  SUSPENDED: { label: 'ID stopped', cls: 'bg-red-50 text-red-700' },
 };
 
 /** Super Admin: businesses that signed up. Check their details and KYC, then approve, reject or suspend. */
@@ -59,6 +59,9 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
           </div>
           <div class="mt-auto flex flex-wrap gap-2 pt-2 border-t border-ink-100">
             <button class="btn btn-secondary btn-sm" (click)="open(c)"><app-icon name="eye" [size]="14" />View details &amp; KYC</button>
+            @if (waLink(c); as wa) {
+              <a class="btn btn-secondary btn-sm !text-emerald-700 !border-emerald-200 hover:!bg-emerald-50" [href]="wa" target="_blank" rel="noopener" [title]="'Send the ' + st(c.status).label.toLowerCase() + ' message to ' + c.phone + ' on WhatsApp'"><app-icon name="phone" [size]="14" />WhatsApp</a>
+            }
             <span class="flex-1"></span>
             @if (!c.is_main) {
               @switch (c.status) {
@@ -66,8 +69,8 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
                   <button class="btn btn-ghost btn-sm hover:!text-red-600" (click)="act(c, 'reject')">Reject</button>
                   <button class="btn btn-primary btn-sm" (click)="act(c, 'approve')"><app-icon name="check" [size]="14" />Approve</button>
                 }
-                @case ('APPROVED') { <button class="btn btn-ghost btn-sm hover:!text-red-600" (click)="act(c, 'suspend')">Suspend</button> }
-                @case ('SUSPENDED') { <button class="btn btn-primary btn-sm" (click)="act(c, 'reactivate')">Reactivate</button> }
+                @case ('APPROVED') { <button class="btn btn-secondary btn-sm !text-red-700 !border-red-200 hover:!bg-red-50" (click)="act(c, 'suspend')" title="Stop this company's login and booking page"><app-icon name="x" [size]="14" />Stop ID</button> }
+                @case ('SUSPENDED') { <button class="btn btn-primary btn-sm" (click)="act(c, 'reactivate')" title="Let this company log in again"><app-icon name="check" [size]="14" />Start ID</button> }
               }
             }
           </div>
@@ -106,6 +109,15 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
             <button class="btn btn-ghost hover:!text-red-600" (click)="act(d, 'reject')">Reject</button>
             <button class="btn btn-primary" (click)="act(d, 'approve')"><app-icon name="check" [size]="16" />Approve</button>
           }
+          @if (!d.is_main && d.status === 'APPROVED') {
+            <button class="btn btn-secondary !text-red-700 !border-red-200 hover:!bg-red-50" (click)="act(d, 'suspend')"><app-icon name="x" [size]="16" />Stop ID</button>
+          }
+          @if (!d.is_main && d.status === 'SUSPENDED') {
+            <button class="btn btn-primary" (click)="act(d, 'reactivate')"><app-icon name="check" [size]="16" />Start ID</button>
+          }
+        }
+        @if (detail(); as d) {
+          @if (waLink(d); as wa) { <a class="btn btn-secondary !text-emerald-700 !border-emerald-200 hover:!bg-emerald-50" [href]="wa" target="_blank" rel="noopener"><app-icon name="phone" [size]="16" />Tell on WhatsApp</a> }
         }
         <button class="btn btn-secondary" (click)="detail.set(null)">Close</button>
       </div>
@@ -118,7 +130,7 @@ export class CompaniesComponent {
   private auth = inject(AuthService);
 
   tabs: { key: CompanyStatus | 'ALL'; label: string }[] = [
-    { key: 'PENDING', label: 'Waiting' }, { key: 'APPROVED', label: 'Approved' }, { key: 'SUSPENDED', label: 'Suspended' },
+    { key: 'PENDING', label: 'Waiting' }, { key: 'APPROVED', label: 'Approved' }, { key: 'SUSPENDED', label: 'Stopped' },
     { key: 'REJECTED', label: 'Rejected' }, { key: 'ALL', label: 'All' },
   ];
   kinds = [{ key: 'aadhaar' as const, label: 'Aadhaar card' }, { key: 'pan' as const, label: 'PAN card' }];
@@ -143,6 +155,25 @@ export class CompaniesComponent {
 
   kycUrl(id: number, kind: 'aadhaar' | 'pan'): string {
     return `/api/super/companies/${id}/kyc/${kind}?token=${encodeURIComponent(this.auth.token || '')}`;
+  }
+
+  /**
+   * WhatsApp link to the company's mobile with the message for its current status already typed.
+   * Opens the Super Admin's own WhatsApp; nothing is sent until they press Send.
+   */
+  waLink(c: Company): string | null {
+    if (c.is_main || c.status === 'PENDING') return null;
+    let phone = String(c.phone || '').replace(/\D/g, '');
+    if (phone.length === 10) phone = `91${phone}`;
+    if (phone.length < 11) return null;
+    const origin = location.origin;
+    const reason = c.status_note ? `\nKaaran: ${c.status_note}` : '';
+    const text = {
+      APPROVED: `Namaste ${c.owner_name} ji,\nAapka BookMyUtsav account (${c.company_name}) approve ho gaya hai. 🎉\n\nLogin: ${origin}/login\nAapka booking page: ${origin}/book/${c.slug}`,
+      REJECTED: `Namaste ${c.owner_name} ji,\nAapka BookMyUtsav sign-up (${c.company_name}) approve nahi hua.${reason}\n\nSahi details ke saath dobara sign-up karein: ${origin}/signup`,
+      SUSPENDED: `Namaste ${c.owner_name} ji,\nAapki BookMyUtsav ID (${c.company_name}) abhi band kar di gayi hai.${reason}\n\nDobara chalu karne ke liye humse sampark karein.`,
+    }[c.status as 'APPROVED' | 'REJECTED' | 'SUSPENDED'];
+    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
   }
 
   rows(d: Company): [string, string | null][] {
@@ -179,7 +210,9 @@ export class CompaniesComponent {
     let body: { reason?: string } = {};
     if (action === 'approve' && !window.confirm(`Approve ${c.company_name}? They can log in and use the panel right away.`)) return;
     if (action === 'reject' || action === 'suspend') {
-      const reason = window.prompt(action === 'reject' ? `Why are you rejecting ${c.company_name}? (shown to them)` : `Why are you suspending ${c.company_name}? (shown when they try to log in)`);
+      const reason = window.prompt(action === 'reject'
+        ? `Why are you rejecting ${c.company_name}? (shown to them)`
+        : `Stop the ID of ${c.company_name}? They cannot log in and their booking page closes. Their data stays safe.\n\nReason (shown when they try to log in), e.g. "Payment pending":`, action === 'suspend' ? 'Payment pending – please contact us' : '');
       if (reason === null) return;
       body = { reason: reason.trim() };
     }
@@ -187,8 +220,8 @@ export class CompaniesComponent {
       const updated = await this.api.post<Company>(`/super/companies/${c.id}/${action}`, body);
       this.list.update((l) => l.map((x) => (x.id === c.id ? { ...x, ...updated } : x)));
       if (this.detail()?.id === c.id) this.detail.set({ ...this.detail()!, ...updated });
-      const msg = { approve: 'approved – they can log in now', reject: 'rejected', suspend: 'suspended', reactivate: 'reactivated' }[action];
-      this.toast.success(`${c.company_name} ${msg}`);
+      const msg = { approve: 'approved – they can log in now', reject: 'rejected', suspend: 'ID stopped – they cannot log in now', reactivate: 'ID started again – they can log in now' }[action];
+      this.toast.success(`${c.company_name} ${msg}. An email went to ${c.email}. Use the WhatsApp button to tell them on ${c.phone}.`);
     } catch (e) {
       this.toast.fail(e);
     }
