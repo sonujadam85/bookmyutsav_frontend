@@ -71,6 +71,7 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
                 }
                 @case ('APPROVED') { <button class="btn btn-secondary btn-sm !text-red-700 !border-red-200 hover:!bg-red-50" (click)="act(c, 'suspend')" title="Stop this company's login and booking page"><app-icon name="x" [size]="14" />Stop ID</button> }
                 @case ('SUSPENDED') { <button class="btn btn-primary btn-sm" (click)="act(c, 'reactivate')" title="Let this company log in again"><app-icon name="check" [size]="14" />Start ID</button> }
+                @case ('REJECTED') { <button class="btn btn-primary btn-sm" (click)="act(c, 'approve')" title="Changed your mind? Approve this sign-up now"><app-icon name="check" [size]="14" />Approve</button> }
               }
             }
           </div>
@@ -105,6 +106,9 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
       }
       <div footer class="flex flex-wrap gap-2 justify-end w-full">
         @if (detail(); as d) {
+          @if (!d.is_main && d.status === 'REJECTED') {
+            <button class="btn btn-primary" (click)="act(d, 'approve')"><app-icon name="check" [size]="16" />Approve</button>
+          }
           @if (!d.is_main && d.status === 'PENDING') {
             <button class="btn btn-ghost hover:!text-red-600" (click)="act(d, 'reject')">Reject</button>
             <button class="btn btn-primary" (click)="act(d, 'approve')"><app-icon name="check" [size]="16" />Approve</button>
