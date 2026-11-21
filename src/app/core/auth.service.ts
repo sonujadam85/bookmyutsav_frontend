@@ -18,6 +18,8 @@ export class AuthService {
   /** The platform owner's own company (it can have several logins). */
   readonly isMainCompany = computed(() => this.user()?.company?.is_main ?? true);
   readonly companyName = computed(() => this.user()?.company?.name || 'BookMyUtsav');
+  /** The company's own logo, or the BookMyUtsav logo when it has not uploaded one. */
+  readonly companyLogo = computed(() => this.user()?.company?.logo_url || '/brand/logo-icon-192.png');
   /** Public booking page of the logged-in company. */
   readonly bookingPath = computed(() => (this.user()?.company?.slug ? `/book/${this.user()!.company!.slug}` : '/book'));
 

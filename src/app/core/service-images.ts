@@ -29,6 +29,30 @@ export function resizeImage(file: File, max = 1600, quality = 0.85): Promise<{ m
   });
 }
 
+/** Company logo: kept as PNG so a transparent background stays transparent; at most 512 px. */
+export function resizeLogo(file: File, max = 512): Promise<{ mime_type: string; data_base64: string }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error(`${file.name} is not a readable image`));
+      img.onload = () => {
+        const s = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.width * s));
+        c.height = Math.max(1, Math.round(img.height * s));
+        const ctx = c.getContext('2d');
+        if (!ctx) return resolve({ mime_type: file.type || 'image/png', data_base64: String(reader.result) });
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        resolve({ mime_type: 'image/png', data_base64: c.toDataURL('image/png') });
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 export const OTHER_HEADING = 'Other';
 
 /** Group items under their heading, keeping the order in which headings first appear. */

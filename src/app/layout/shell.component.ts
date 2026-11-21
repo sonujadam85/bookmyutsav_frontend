@@ -22,10 +22,10 @@ interface NavItem { path: string; label: string; icon: string; admin?: boolean; 
       <aside class="no-print fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 bg-brand-950 text-brand-100 flex flex-col transition-transform lg:translate-x-0"
              [class.-translate-x-full]="!menuOpen()">
         <div class="px-6 py-6 flex items-center gap-3">
-          <img src="/brand/logo-icon-192.png" alt="BookMyUtsav" class="w-11 h-11 rounded-xl shadow-lg ring-1 ring-white/10" />
+          <img [src]="auth.companyLogo()" [alt]="auth.companyName() + ' logo'" class="w-11 h-11 rounded-xl shadow-lg ring-1 ring-white/10 bg-white object-contain p-0.5 shrink-0" />
           <div class="min-w-0">
             <p class="font-display text-xl text-white leading-tight truncate max-w-[180px]" [title]="auth.companyName()">{{ auth.companyName() }}</p>
-            <p class="text-[11px] uppercase tracking-[0.2em] text-gold-400">@if (auth.isSuper()) { Super Admin · } BookMyUtsav</p>
+            <p class="text-[11px] uppercase tracking-[0.2em] text-gold-400">@if (auth.isSuper()) { Super Admin · BookMyUtsav } @else if (auth.isMainCompany()) { BookMyUtsav } @else { on BookMyUtsav }</p>
           </div>
         </div>
         <nav class="flex-1 overflow-y-auto px-3 pb-4 space-y-6">

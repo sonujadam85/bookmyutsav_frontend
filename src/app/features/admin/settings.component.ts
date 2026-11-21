@@ -7,6 +7,7 @@ import { LookupService } from '../../core/lookup.service';
 import { ToastService } from '../../core/toast.service';
 import { EventType, Settings } from '../../core/models';
 import { IconComponent } from '../../shared/icon.component';
+import { resizeLogo } from '../../core/service-images';
 
 @Component({
   selector: 'app-settings',
@@ -29,6 +30,27 @@ import { IconComponent } from '../../shared/icon.component';
       </form>
 
       @if (auth.isAdmin()) {
+        <section class="card card-pad">
+          <h2 class="card-title mb-1">Company Logo</h2>
+          <p class="text-sm text-ink-500 mb-4">Shown in your panel and on your booking page, so your clients see your brand.</p>
+          <div class="flex flex-wrap items-center gap-5">
+            <div class="w-24 h-24 rounded-2xl border border-ink-200 bg-ink-50 grid place-items-center overflow-hidden shrink-0">
+              @if (auth.user()?.company?.logo_url; as logo) { <img [src]="logo" alt="Your company logo" class="w-full h-full object-contain p-1.5" /> }
+              @else { <span class="text-3xl font-bold text-brand-800">{{ auth.companyName().slice(0, 1).toUpperCase() }}</span> }
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <label class="btn btn-primary cursor-pointer" [class.opacity-60]="logoBusy()">
+                <app-icon name="upload" [size]="16" />{{ auth.user()?.company?.logo_url ? 'Change logo' : 'Upload logo' }}
+                <input type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" (change)="uploadLogo($event)" [disabled]="logoBusy()" />
+              </label>
+              @if (auth.user()?.company?.logo_url) {
+                <button type="button" class="btn btn-secondary" (click)="removeLogo()" [disabled]="logoBusy()"><app-icon name="trash" [size]="16" />Remove</button>
+              }
+            </div>
+            <p class="text-xs text-ink-500 basis-full">PNG with a clear or white background works best. Square logos look best.</p>
+          </div>
+        </section>
+
         <form class="card card-pad" (ngSubmit)="saveBusiness()">
           <h2 class="card-title mb-1">Business Details</h2>
           <p class="text-sm text-ink-500 mb-4">Shown on payment receipts and PDF reports.</p>
@@ -134,10 +156,45 @@ export class SettingsComponent {
     try {
       this.biz = await this.api.put<Settings>('/settings', this.biz);
       this.toast.success('Business details saved');
+      void this.auth.refresh(); // company name in the side menu
     } catch (e) {
       this.toast.fail(e);
     } finally {
       this.busy.set(false);
+    }
+  }
+
+  logoBusy = signal(false);
+
+  async uploadLogo(ev: Event): Promise<void> {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    this.logoBusy.set(true);
+    try {
+      const img = await resizeLogo(file);
+      await this.api.put('/settings/logo', { logo: img.data_base64, logo_mime: img.mime_type });
+      await this.auth.refresh();
+      this.toast.success('Logo updated');
+    } catch (e) {
+      this.toast.fail(e);
+    } finally {
+      this.logoBusy.set(false);
+    }
+  }
+
+  async removeLogo(): Promise<void> {
+    if (!(await this.confirm.delete('your company logo'))) return;
+    this.logoBusy.set(true);
+    try {
+      await this.api.delete('/settings/logo');
+      await this.auth.refresh();
+      this.toast.success('Logo removed');
+    } catch (e) {
+      this.toast.fail(e);
+    } finally {
+      this.logoBusy.set(false);
     }
   }
 

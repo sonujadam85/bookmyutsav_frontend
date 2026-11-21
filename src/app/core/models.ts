@@ -4,7 +4,7 @@ export type PaymentMode = 'CASH' | 'UPI' | 'BANK_TRANSFER' | 'CHEQUE';
 export type Installment = 'ADVANCE' | 'SECOND' | 'THIRD' | 'FINAL' | 'OTHER';
 export type ExpenseStatus = 'PAID' | 'PARTIAL' | 'UNPAID';
 
-export interface CompanyRef { id: number; name: string; slug: string; is_main: boolean; }
+export interface CompanyRef { id: number; name: string; slug: string; is_main: boolean; logo_url?: string | null; }
 export interface User { id: number; name: string; email: string; role: Role; active: number; created_at?: string; is_super?: boolean; company?: CompanyRef; }
 
 /** A business using the panel (Super Admin view). */
@@ -12,7 +12,7 @@ export type CompanyStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED';
 export interface Company {
   id: number; slug: string; company_name: string; profile_name: string | null; business_type: string | null;
   owner_name: string; email: string; phone: string | null; address: string | null; status: CompanyStatus; status_note: string | null;
-  is_main: boolean; aadhaar_last4: string | null; pan_masked: string | null; has_aadhaar_photo: boolean; has_pan_photo: boolean;
+  is_main: boolean; aadhaar_last4: string | null; pan_masked: string | null; has_aadhaar_photo: boolean; has_pan_photo: boolean; has_logo?: boolean;
   created_at: string; approved_at: string | null; aadhaar_no?: string | null; pan_no?: string | null;
 }
 

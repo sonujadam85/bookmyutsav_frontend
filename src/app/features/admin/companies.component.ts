@@ -44,7 +44,8 @@ const STATUS: Record<CompanyStatus, { label: string; cls: string }> = {
       @for (c of shown(); track c.id) {
         <article class="card card-pad flex flex-col gap-3">
           <div class="flex items-start gap-3">
-            <div class="w-11 h-11 rounded-xl bg-brand-100 text-brand-800 flex items-center justify-center font-bold">{{ c.company_name.slice(0, 1).toUpperCase() }}</div>
+            @if (c.has_logo) { <img [src]="logoUrl(c.id)" [alt]="c.company_name + ' logo'" class="w-11 h-11 rounded-xl border border-ink-100 bg-white object-contain p-0.5 shrink-0" /> }
+            @else { <div class="w-11 h-11 rounded-xl bg-brand-100 text-brand-800 flex items-center justify-center font-bold shrink-0">{{ c.company_name.slice(0, 1).toUpperCase() }}</div> }
             <div class="flex-1 min-w-0">
               <p class="font-semibold truncate">{{ c.company_name }}@if (c.is_main) { <span class="badge bg-brand-50 text-brand-700 ml-1">Your company</span> }</p>
               <p class="text-xs text-ink-500">{{ c.business_type }} · Signed up {{ c.created_at.slice(0, 10) | dmy }}</p>
@@ -155,6 +156,10 @@ export class CompaniesComponent {
 
   count(k: CompanyStatus | 'ALL'): number {
     return k === 'ALL' ? this.list().length : this.list().filter((c) => c.status === k).length;
+  }
+
+  logoUrl(id: number): string {
+    return `/api/super/companies/${id}/logo?token=${encodeURIComponent(this.auth.token || '')}`;
   }
 
   kycUrl(id: number, kind: 'aadhaar' | 'pan'): string {
