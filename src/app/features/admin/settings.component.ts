@@ -57,7 +57,8 @@ import { resizeLogo } from '../../core/service-images';
           <div class="grid sm:grid-cols-2 gap-4">
             <div class="sm:col-span-2"><label class="label">Business Name</label><input class="input" name="bn" [(ngModel)]="biz.business_name" /></div>
             <div class="sm:col-span-2"><label class="label">Address</label><textarea class="input" rows="2" name="ba" [(ngModel)]="biz.business_address"></textarea></div>
-            <div><label class="label">Phone</label><input class="input" name="bp" [(ngModel)]="biz.business_phone" /></div>
+            <div><label class="label">Phone</label><input class="input" name="bp" [(ngModel)]="biz.business_phone" /><p class="hint">Home page par Call aur WhatsApp isi number par jayega.</p></div>
+            <div><label class="label">City</label><input class="input" name="bcity" [(ngModel)]="biz.business_city" maxlength="80" placeholder="Jaise: Jaipur" /><p class="hint">Home page par clients isi shehar mein aapko dhoondhenge.</p></div>
             <div><label class="label">Email</label><input class="input" name="be" [(ngModel)]="biz.business_email" /></div>
             <div><label class="label">GSTIN</label><input class="input" name="gst" [(ngModel)]="biz.gstin" /></div>
             <div class="sm:col-span-2"><label class="label">Receipt Footer</label><input class="input" name="rf" [(ngModel)]="biz.receipt_footer" placeholder="Thank you for your payment." /></div>

@@ -106,7 +106,7 @@ export interface Lookups {
   expense_categories: string[]; units: string[]; checklist_categories: string[]; material_categories: string[]; payment_modes: PaymentMode[];
 }
 
-export interface Settings { business_name: string; business_address: string; business_phone: string; business_email: string; gstin: string; receipt_footer: string; booking_notify_email?: string; }
+export interface Settings { business_name: string; business_address: string; business_phone: string; business_email: string; gstin: string; receipt_footer: string; booking_notify_email?: string; business_city?: string; }
 
 export interface ReportColumn { key: string; label: string; type: 'text' | 'date' | 'money' | 'number' | 'status' | 'percent'; }
 export interface ReportData { title: string; columns: ReportColumn[]; rows: Record<string, any>[]; totals: Record<string, number>; secondary?: Omit<ReportData, 'secondary'>; }

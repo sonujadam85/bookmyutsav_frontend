@@ -72,6 +72,7 @@ const BUSINESS_TYPES = ['Wedding Planner', 'Event Management', 'Decorator', 'Ten
                         <option value="">Select...</option>
                         @for (t of types; track t) { <option [value]="t">{{ t }}</option> }
                       </select></div>
+                    <div><label class="label" for="s-city">City</label><input id="s-city" class="input !h-12 !rounded-xl" name="city" [(ngModel)]="f.city" maxlength="80" autocomplete="address-level2" placeholder="Jaise: Jaipur" /><p class="hint">Clients isi shehar mein aapko dhoondhenge.</p></div>
                     <div class="sm:col-span-2"><label class="label" for="s-profile">Profile name</label>
                       <input id="s-profile" class="input !h-12 !rounded-xl" name="profile_name" [(ngModel)]="f.profile_name" maxlength="80" (input)="checkSlug()" placeholder="e.g. Sharma Events" />
                       <p class="hint">Yahi naam aapke booking link mein aayega.</p></div>
@@ -155,7 +156,7 @@ export class SignupComponent {
   types = BUSINESS_TYPES;
   cards = [{ key: 'aadhaar' as const, label: 'Aadhaar card' }, { key: 'pan' as const, label: 'PAN card' }];
   origin = location.origin;
-  f = { owner_name: '', phone: '', email: '', address: '', company_name: '', business_type: '', profile_name: '', aadhaar_no: '', pan_no: '', password: '' };
+  f = { owner_name: '', phone: '', email: '', address: '', company_name: '', business_type: '', city: '', profile_name: '', aadhaar_no: '', pan_no: '', password: '' };
   confirm = '';
   photos = signal<Partial<Record<'aadhaar' | 'pan', Card>>>({});
   logo = signal<Card | null>(null);
@@ -217,7 +218,7 @@ export class SignupComponent {
     const f = this.f;
     const need: [string, string][][] = [
       [[f.owner_name, 'your name'], [f.phone, 'mobile number'], [f.email, 'email'], [f.address, 'address']],
-      [[f.company_name, 'company name'], [f.business_type, 'business type'], [f.profile_name, 'profile name'], [this.logo() ? 'ok' : '', 'your company logo (upload a photo)']],
+      [[f.company_name, 'company name'], [f.business_type, 'business type'], [f.city, 'your city'], [f.profile_name, 'profile name'], [this.logo() ? 'ok' : '', 'your company logo (upload a photo)']],
       [[f.aadhaar_no, 'Aadhaar number'], [f.pan_no, 'PAN number']],
       [],
     ];
@@ -267,7 +268,7 @@ export class SignupComponent {
     } catch (e) {
       const fields = ApiService.fieldErrors(e);
       const first = Object.keys(fields)[0];
-      const stepOf: Record<string, number> = { owner_name: 0, phone: 0, email: 0, address: 0, company_name: 1, business_type: 1, profile_name: 1, aadhaar_no: 2, pan_no: 2, aadhaar_photo: 2, pan_photo: 2, logo: 1 };
+      const stepOf: Record<string, number> = { owner_name: 0, phone: 0, email: 0, address: 0, company_name: 1, business_type: 1, city: 1, profile_name: 1, aadhaar_no: 2, pan_no: 2, aadhaar_photo: 2, pan_photo: 2, logo: 1 };
       if (first && first in stepOf) this.step.set(stepOf[first]);
       this.error.set((first && fields[first]) || ApiService.message(e));
     } finally {

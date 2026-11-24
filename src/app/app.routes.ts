@@ -3,6 +3,8 @@ import { adminGuard, authGuard, guestGuard, mainAdminGuard, superGuard } from '.
 import { ShellComponent } from './layout/shell.component';
 
 export const routes: Routes = [
+  // Public home page: every approved business, by city and type.
+  { path: '', pathMatch: 'full', loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent), title: 'BookMyUtsav – Event, photo aur DJ booking' },
   { path: 'login', canActivate: [guestGuard], loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent), title: 'Login · BookMyUtsav' },
   { path: 'signup', canActivate: [guestGuard], loadComponent: () => import('./features/auth/signup.component').then((m) => m.SignupComponent), title: 'Sign up · BookMyUtsav' },
   // Public booking pages for clients - no login needed. /book = main company, /book/<profile> = that company.
