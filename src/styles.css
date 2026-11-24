@@ -3,61 +3,172 @@
 @tailwind utilities;
 
 @layer base {
-  html { -webkit-tap-highlight-color: transparent; }
-  h1, h2, h3 { @apply text-ink-900; }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply text-ink-900;
+  }
+
   input[type='date']::-webkit-calendar-picker-indicator,
-  input[type='time']::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .6; }
+  input[type='time']::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: .6;
+  }
 }
 
 @layer components {
-  .card { @apply bg-white rounded-2xl border border-ink-100 shadow-soft; }
-  .card-pad { @apply p-4 sm:p-6; }
-  .card-title { @apply text-base font-semibold text-ink-900; }
+  .card {
+    @apply bg-white rounded-2xl border border-ink-100 shadow-soft;
+  }
 
-  .page-title { @apply font-display text-2xl sm:text-3xl font-bold text-ink-900; }
-  .page-sub { @apply text-sm text-ink-500 mt-1; }
+  .card-pad {
+    @apply p-4 sm:p-6;
+  }
 
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap; }
-  .btn-sm { @apply px-3 py-1.5 text-xs rounded-lg; }
-  .btn-primary { @apply bg-brand-800 text-white hover:bg-brand-900 shadow-sm; }
-  .btn-gold { @apply bg-gold-400 text-brand-950 hover:bg-gold-300; }
-  .btn-secondary { @apply bg-white text-ink-800 border border-ink-200 hover:bg-ink-50; }
-  .btn-ghost { @apply text-ink-600 hover:bg-ink-100; }
-  .btn-danger { @apply bg-red-600 text-white hover:bg-red-700; }
-  .btn-icon { @apply inline-flex items-center justify-center w-9 h-9 rounded-lg text-ink-500 hover:bg-ink-100 hover:text-ink-900 transition; }
+  .card-title {
+    @apply text-base font-semibold text-ink-900;
+  }
 
-  .label { @apply block text-xs font-semibold text-ink-600 mb-1.5 uppercase tracking-wide; }
-  .input { @apply block w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-400
-           focus:border-brand-500 focus:ring-4 focus:ring-brand-100 focus:outline-none transition disabled:bg-ink-50; }
-  .input.ng-invalid.ng-touched, .input-error { @apply border-red-400 focus:border-red-500 focus:ring-red-100; }
-  .err { @apply text-xs text-red-600 mt-1; }
-  .hint { @apply text-xs text-ink-400 mt-1; }
+  .page-title {
+    @apply font-display text-2xl sm:text-3xl font-bold text-ink-900;
+  }
 
-  .table-wrap { @apply overflow-x-auto -mx-4 sm:mx-0; }
-  .table { @apply w-full text-sm; }
-  .table thead th { @apply text-left text-[11px] font-semibold uppercase tracking-wider text-ink-500 bg-ink-50 px-4 py-3 whitespace-nowrap; }
-  .table thead th:first-child { @apply rounded-l-xl; }
-  .table thead th:last-child { @apply rounded-r-xl; }
-  .table tbody td { @apply px-4 py-3 border-b border-ink-100 align-middle; }
-  .table tbody tr:hover td { @apply bg-brand-50/40; }
-  .table tfoot td { @apply px-4 py-3 font-semibold bg-ink-50; }
-  .th-sort { @apply cursor-pointer select-none hover:text-ink-900; }
+  .page-sub {
+    @apply text-sm text-ink-500 mt-1;
+  }
 
-  .badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap;
+  }
 
-  .tab { @apply px-3.5 py-2 text-sm font-medium rounded-lg text-ink-600 hover:bg-ink-100 whitespace-nowrap transition; }
-  .tab-active { @apply bg-brand-800 text-white hover:bg-brand-800; }
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs rounded-lg;
+  }
 
-  .stat { @apply card p-4 sm:p-5 flex flex-col gap-1; }
-  .stat-label { @apply text-xs font-semibold uppercase tracking-wider text-ink-500; }
-  .stat-value { @apply text-xl sm:text-2xl font-bold text-ink-900; }
+  .btn-primary {
+    @apply bg-brand-800 text-white hover:bg-brand-900 shadow-sm;
+  }
 
-  .money { @apply tabular-nums whitespace-nowrap; }
-  .chip { @apply inline-flex items-center rounded-lg bg-ink-100 px-2 py-1 text-xs font-medium text-ink-700; }
+  .btn-gold {
+    @apply bg-gold-400 text-brand-950 hover:bg-gold-300;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-ink-800 border border-ink-200 hover:bg-ink-50;
+  }
+
+  .btn-ghost {
+    @apply text-ink-600 hover:bg-ink-100;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+  }
+
+  .btn-icon {
+    @apply inline-flex items-center justify-center w-9 h-9 rounded-lg text-ink-500 hover:bg-ink-100 hover:text-ink-900 transition;
+  }
+
+  .label {
+    @apply block text-xs font-semibold text-ink-600 mb-1.5 uppercase tracking-wide;
+  }
+
+  .input {
+    @apply block w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 focus:outline-none transition disabled:bg-ink-50;
+  }
+
+  .input.ng-invalid.ng-touched,
+  .input-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-100;
+  }
+
+  .err {
+    @apply text-xs text-red-600 mt-1;
+  }
+
+  .hint {
+    @apply text-xs text-ink-400 mt-1;
+  }
+
+  .table-wrap {
+    @apply overflow-x-auto -mx-4 sm:mx-0;
+  }
+
+  .table {
+    @apply w-full text-sm;
+  }
+
+  .table thead th {
+    @apply text-left text-[11px] font-semibold uppercase tracking-wider text-ink-500 bg-ink-50 px-4 py-3 whitespace-nowrap;
+  }
+
+  .table thead th:first-child {
+    @apply rounded-l-xl;
+  }
+
+  .table thead th:last-child {
+    @apply rounded-r-xl;
+  }
+
+  .table tbody td {
+    @apply px-4 py-3 border-b border-ink-100 align-middle;
+  }
+
+  .table tbody tr:hover td {
+    @apply bg-brand-50/40;
+  }
+
+  .table tfoot td {
+    @apply px-4 py-3 font-semibold bg-ink-50;
+  }
+
+  .th-sort {
+    @apply cursor-pointer select-none hover:text-ink-900;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap;
+  }
+
+  .tab {
+    @apply px-3.5 py-2 text-sm font-medium rounded-lg text-ink-600 hover:bg-ink-100 whitespace-nowrap transition;
+  }
+
+  .tab-active {
+    @apply bg-brand-800 text-white hover:bg-brand-800;
+  }
+
+  .stat {
+    @apply card p-4 sm:p-5 flex flex-col gap-1;
+  }
+
+  .stat-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-ink-500;
+  }
+
+  .stat-value {
+    @apply text-xl sm:text-2xl font-bold text-ink-900;
+  }
+
+  .money {
+    @apply tabular-nums whitespace-nowrap;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-lg bg-ink-100 px-2 py-1 text-xs font-medium text-ink-700;
+  }
 }
 
 @media print {
-  .no-print { display: none !important; }
-  body { background: white !important; }
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
 }

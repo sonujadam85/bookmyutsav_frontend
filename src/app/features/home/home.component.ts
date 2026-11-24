@@ -54,32 +54,32 @@ const PAGE = 12;
 
         <div class="relative max-w-[1240px] mx-auto px-4 sm:px-8 pt-4 sm:pt-10 pb-20 sm:pb-[120px] flex flex-col sm:items-center sm:text-center gap-4 sm:gap-[18px]">
           <p class="hidden sm:block text-gold-500 font-bold text-[13px] tracking-[2.5px] uppercase">Shaadi · Party · Function</p>
-          <h1 class="font-display font-bold !text-white text-[29px] sm:text-[56px] leading-[1.12] max-w-[900px]">Apne shehar ke event, photo aur DJ wale, ek hi jagah.</h1>
+          <h1 class="font-display font-bold !text-white text-[29px] sm:text-[56px] leading-[1.12] max-w-[900px]">Apne City ke event, photo aur DJ wale, ek hi jagah.</h1>
           <p class="hidden sm:block text-lg leading-relaxed text-brand-200 max-w-[680px]">Services aur photos dekho, price compare karo, aur jo pasand aaye usse seedha baat karo ya online booking karo.</p>
 
           <form class="mt-2 sm:mt-3.5 w-full max-w-[860px] bg-white rounded-[18px] sm:rounded-[20px] p-2 flex flex-col sm:flex-row sm:items-center shadow-2xl text-left" (submit)="$event.preventDefault(); toList()">
             <div class="flex border-b sm:border-b-0 border-ink-100 sm:contents">
               <label class="flex-1 min-w-0 flex flex-col gap-0.5 px-3 sm:px-4 py-2 border-r border-ink-100">
-                <span class="text-[11px] sm:text-xs font-bold text-ink-600 uppercase tracking-wider">Shehar</span>
+                <span class="text-[11px] sm:text-xs font-bold text-ink-600 uppercase tracking-wider">City</span>
                 <select class="border-0 p-0 h-[26px] text-[15px] sm:text-base font-semibold text-ink-950 bg-transparent focus:outline-none cursor-pointer" [value]="city()" (change)="setCity($any($event.target).value)">
-                  <option value="">Sab shehar</option>
+                  <option value="">All City</option>
                   @for (c of cities(); track c.name) { <option [value]="c.name">{{ c.name }} ({{ c.count }})</option> }
                 </select>
               </label>
               <label class="flex-[1.2] min-w-0 flex flex-col gap-0.5 px-3 sm:px-4 py-2 sm:border-r border-ink-100">
-                <span class="text-[11px] sm:text-xs font-bold text-ink-600 uppercase tracking-wider">Kya chahiye</span>
+                <span class="text-[11px] sm:text-xs font-bold text-ink-600 uppercase tracking-wider">Service Type</span>
                 <select class="border-0 p-0 h-[26px] text-[15px] sm:text-base font-semibold text-ink-950 bg-transparent focus:outline-none cursor-pointer" [value]="type()" (change)="setType($any($event.target).value)">
-                  <option value="">Sab services</option>
+                  <option value="">All services</option>
                   @for (t of types(); track t.name) { <option [value]="t.name">{{ t.name }}</option> }
                 </select>
               </label>
             </div>
             <label class="hidden sm:flex flex-[1.3] min-w-0 flex-col gap-0.5 px-4 py-2">
-              <span class="text-xs font-bold text-ink-600 uppercase tracking-wider">Naam se dhoondho</span>
+              <span class="text-xs font-bold text-ink-600 uppercase tracking-wider">Event Name type</span>
               <input class="border-0 p-0 h-[26px] text-base focus:outline-none" placeholder="Jaise: Sharma Events" [value]="q()" (input)="setQ($any($event.target).value)" />
             </label>
             <button class="mt-2 sm:mt-0 h-[46px] sm:h-[58px] px-[26px] rounded-xl sm:rounded-[14px] bg-brand-900 hover:bg-brand-800 text-white font-bold text-base flex items-center justify-center gap-2">
-              <span class="text-gold-500"><app-icon name="search" [size]="18" /></span>Dhoondho
+              <span class="text-gold-500"><app-icon name="search" [size]="18" /></span>Search 
             </button>
           </form>
         </div>
